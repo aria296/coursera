@@ -1,0 +1,27 @@
+{% extends "onlinecourse/base.html" %}
+{% block title %}Exam Results{% endblock %}
+{% block content %}
+<div class="card shadow-sm mb-4"><div class="card-body text-center">
+{% if submission.passed %}
+  <h1 class="text-success">Congratulations!</h1>
+  <p class="lead">You passed the mock exam.</p>
+{% else %}
+  <h1 class="h2">Exam Completed</h1>
+  <p class="lead">Keep practicing and try again.</p>
+{% endif %}
+<p class="h4">Score: {{ submission.score }} / {{ submission.total_questions }}</p>
+<p>Percentage: {{ submission.percentage }}%</p>
+</div></div>
+<h2 class="h4">Exam Results</h2>
+{% for result in results %}
+<div class="card mb-3"><div class="card-body">
+  <h3 class="h6">{{ forloop.counter }}. {{ result.question.text }}</h3>
+  {% if result.is_correct %}<span class="badge bg-success">Correct</span>{% else %}<span class="badge bg-danger">Incorrect</span>{% endif %}
+  <p class="mb-1">Your answer: {% if result.selected_choice %}{{ result.selected_choice.text }}{% else %}Not answered{% endif %}</p>
+  <p class="mb-0">Correct answer: {% if result.correct_choice %}{{ result.correct_choice.text }}{% else %}Not configured{% endif %}</p>
+</div></div>
+{% empty %}
+<p>No detailed result data is available for this session.</p>
+{% endfor %}
+<a class="btn btn-primary mt-2" href="{% url 'onlinecourse:course_details' submission.course.id %}">Back to course</a>
+{% endblock %}

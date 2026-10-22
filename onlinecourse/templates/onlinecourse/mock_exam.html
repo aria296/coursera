@@ -1,0 +1,24 @@
+{% extends "onlinecourse/base.html" %}
+{% block title %}Mock Exam - {{ course.name }}{% endblock %}
+{% block content %}
+<h1 class="h2">Mock Exam: {{ course.name }}</h1>
+<p>Select one answer for each question, then submit your attempt.</p>
+<form method="post" action="{% url 'onlinecourse:submit' course.id %}">
+  {% csrf_token %}
+  <div class="mb-3"><label class="form-label" for="student_name">Your name</label><input class="form-control" id="student_name" name="student_name" value="Student"></div>
+  {% for question in questions %}
+  <fieldset class="card mb-3"><div class="card-body">
+    <legend class="h5">{{ forloop.counter }}. {{ question.text }}</legend>
+    {% for choice in question.choices.all %}
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="choice{{ choice.id }}" value="{{ choice.id }}">
+      <label class="form-check-label" for="choice{{ choice.id }}">{{ choice.text }}</label>
+    </div>
+    {% endfor %}
+  </div></fieldset>
+  {% empty %}
+  <p>No questions are available. Add questions and choices through the admin site.</p>
+  {% endfor %}
+  {% if questions %}<button class="btn btn-primary" type="submit">Submit exam</button>{% endif %}
+</form>
+{% endblock %}

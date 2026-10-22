@@ -1,0 +1,28 @@
+{% extends "onlinecourse/base.html" %}
+{% block title %}{{ course.name }}{% endblock %}
+{% block content %}
+<div class="card shadow-sm mb-4"><div class="card-body">
+  <h1 class="h2">{{ course.name }}</h1>
+  <p class="lead">{{ course.description }}</p>
+  <a class="btn btn-success" href="{% url 'onlinecourse:mock_exam' course.id %}">Take mock exam</a>
+</div></div>
+<h2 class="h4 mb-3">Course Lessons</h2>
+<div class="accordion" id="lessonAccordion">
+{% for lesson in course.lessons.all %}
+  <div class="accordion-item">
+    <h3 class="accordion-header" id="heading{{ lesson.id }}">
+      <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button"
+        data-bs-toggle="collapse" data-bs-target="#lesson{{ lesson.id }}">
+        {{ forloop.counter }}. {{ lesson.title }}
+      </button>
+    </h3>
+    <div id="lesson{{ lesson.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#lessonAccordion">
+      <div class="accordion-body">{{ lesson.content|linebreaks }}</div>
+    </div>
+  </div>
+{% empty %}
+  <p>No lessons have been added to this course yet.</p>
+{% endfor %}
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
